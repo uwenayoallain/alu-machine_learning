@@ -6,3 +6,4 @@ as part of the ALU machine learning curriculum.
 ## Projects
 
 - [Calculus](math/calculus/README.md)
+- [Probability](math/probability/README.md)
