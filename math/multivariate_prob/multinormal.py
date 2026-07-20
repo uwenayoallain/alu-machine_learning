@@ -30,7 +30,8 @@ class MultiNormal:
         difference = x - self.mean
         determinant = np.linalg.det(self.cov)
         inverse = np.linalg.inv(self.cov)
-        exponent = -0.5 * np.matmul(np.matmul(difference.T, inverse),
-                                    difference)
-        denominator = np.sqrt((2 * np.pi) ** dimensions * determinant)
-        return float(np.exp(exponent) / denominator)
+        coefficient = 1 / ((2 * np.pi) ** (dimensions / 2)
+                           * np.sqrt(determinant))
+        exponent = np.dot(difference.T, inverse)
+        exponent = np.dot(exponent, difference / -2)
+        return (coefficient * np.exp(exponent))[0][0]
