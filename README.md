@@ -5,6 +5,7 @@ as part of the ALU machine learning curriculum.
 
 ## Projects
 
+- [Advanced Linear Algebra](math/advanced_linear_algebra/README.md)
 - [Bayesian Probability](math/bayesian_prob/README.md)
 - [Calculus](math/calculus/README.md)
 - [Convolutions and Pooling](math/convolutions_and_pooling/README.md)
