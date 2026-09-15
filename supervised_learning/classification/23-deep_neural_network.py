@@ -2,9 +2,9 @@
 """Adds progress reporting and plotting to a deep network."""
 
 import matplotlib.pyplot as plt
-from importlib import import_module
-
-_Base = import_module('22-deep_neural_network').DeepNeuralNetwork
+_namespace = {}
+exec(open('22-deep_neural_network.py').read(), _namespace)
+_Base = _namespace['DeepNeuralNetwork']
 
 
 class DeepNeuralNetwork(_Base):
