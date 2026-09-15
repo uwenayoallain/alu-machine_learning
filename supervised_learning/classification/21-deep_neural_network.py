@@ -16,11 +16,12 @@ class DeepNeuralNetwork(_Base):
         dz = cache['A{}'.format(self.L)] - Y
         for layer in range(self.L, 0, -1):
             current = cache['A{}'.format(layer - 1)]
+            weights = self.weights['W{}'.format(layer)].copy()
             dw = np.matmul(dz, current.T) / m
             db = np.sum(dz, axis=1, keepdims=True) / m
             self.weights['W{}'.format(layer)] -= alpha * dw
             self.weights['b{}'.format(layer)] -= alpha * db
             if layer > 1:
-                dz = np.matmul(self.weights['W{}'.format(layer)].T, dz)
+                dz = np.matmul(weights.T, dz)
                 dz *= cache['A{}'.format(layer - 1)] * (
                     1 - cache['A{}'.format(layer - 1)])
