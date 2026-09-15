@@ -15,13 +15,13 @@ class DeepNeuralNetwork:
             raise ValueError("nx must be a positive integer")
         if type(layers) is not list or not layers:
             raise TypeError("layers must be a list of positive integers")
-        if not all(type(n) is int and n > 0 for n in layers):
-            raise TypeError("layers must be a list of positive integers")
         self.L = len(layers)
         self.cache = {}
         self.weights = {}
         previous = nx
         for layer, nodes in enumerate(layers, 1):
+            if type(nodes) is not int or nodes <= 0:
+                raise TypeError("layers must be a list of positive integers")
             self.weights['W{}'.format(layer)] = (np.random.randn(nodes,
                 previous) * np.sqrt(2 / previous))
             self.weights['b{}'.format(layer)] = np.zeros((nodes, 1))
