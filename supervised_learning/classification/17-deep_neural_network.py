@@ -24,8 +24,8 @@ class DeepNeuralNetwork:
         for layer, nodes in enumerate(layers, 1):
             if type(nodes) is not int or nodes <= 0:
                 raise TypeError("layers must be a list of positive integers")
-            self.__weights['W{}'.format(layer)] = (np.random.randn(nodes,
-                previous) * np.sqrt(2 / previous))
+            self.__weights['W{}'.format(layer)] = (
+                np.random.randn(nodes, previous) * np.sqrt(2 / previous))
             self.__weights['b{}'.format(layer)] = np.zeros((nodes, 1))
             previous = nodes
 
