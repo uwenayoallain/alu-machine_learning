@@ -9,13 +9,13 @@ class DeepNeuralNetwork:
 
     def __init__(self, nx, layers):
         """Initialize He weights and zero biases."""
-        if not isinstance(nx, int):
+        if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
-        if not isinstance(layers, list) or not layers:
+        if type(layers) is not list or not layers:
             raise TypeError("layers must be a list of positive integers")
-        if not all(isinstance(n, int) and n > 0 for n in layers):
+        if not all(type(n) is int and n > 0 for n in layers):
             raise TypeError("layers must be a list of positive integers")
         self.L = len(layers)
         self.cache = {}
