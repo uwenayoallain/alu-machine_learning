@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Adds training to a deep network."""
 
+import numpy as np
+
 _namespace = {}
 exec(open('21-deep_neural_network.py').read(), _namespace)
 _Base = _namespace['DeepNeuralNetwork']
