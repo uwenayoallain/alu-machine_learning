@@ -2,9 +2,9 @@
 """Adds backpropagation to a deep network."""
 
 import numpy as np
-from importlib import import_module
-
-_Base = import_module('20-deep_neural_network').DeepNeuralNetwork
+_namespace = {}
+exec(open('20-deep_neural_network.py').read(), _namespace)
+_Base = _namespace['DeepNeuralNetwork']
 
 
 class DeepNeuralNetwork(_Base):
