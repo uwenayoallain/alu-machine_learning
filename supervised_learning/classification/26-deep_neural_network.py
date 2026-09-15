@@ -2,9 +2,9 @@
 """Adds persistence to a deep neural network."""
 
 import pickle
-from importlib import import_module
-
-_Base = import_module('23-deep_neural_network').DeepNeuralNetwork
+_namespace = {}
+exec(open('23-deep_neural_network.py').read(), _namespace)
+_Base = _namespace['DeepNeuralNetwork']
 
 
 class DeepNeuralNetwork(_Base):
