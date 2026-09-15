@@ -2,9 +2,9 @@
 """Adds progress reporting and plotting to the neural network."""
 
 import matplotlib.pyplot as plt
-from importlib import import_module
-
-_Base = import_module('14-neural_network').NeuralNetwork
+_namespace = {}
+exec(open('14-neural_network.py').read(), _namespace)
+_Base = _namespace['NeuralNetwork']
 
 
 class NeuralNetwork(_Base):
