@@ -28,7 +28,7 @@ class DeepNeuralNetwork(_Base):
 
     def cost(self, Y, A):
         """Calculate multiclass cross-entropy cost."""
-        return -np.sum(Y * np.log(A + 1.0000001e-7)) / Y.shape[1]
+        return -np.sum(Y * np.log(A)) / Y.shape[1]
 
     def evaluate(self, X, Y):
         """Return one-hot predictions and multiclass cost."""
