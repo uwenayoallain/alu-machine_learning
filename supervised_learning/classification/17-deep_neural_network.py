@@ -9,20 +9,21 @@ class DeepNeuralNetwork:
 
     def __init__(self, nx, layers):
         """Initialize He weights and zero biases."""
-        if not isinstance(nx, int):
+        if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
-        if not isinstance(layers, list):
+        if type(layers) is not list:
             raise TypeError("layers must be a list of positive integers")
-        if not layers or not all(isinstance(n, int) and n > 0
-                                  for n in layers):
+        if not layers:
             raise TypeError("layers must be a list of positive integers")
         self.__L = len(layers)
         self.__cache = {}
         self.__weights = {}
         previous = nx
         for layer, nodes in enumerate(layers, 1):
+            if type(nodes) is not int or nodes <= 0:
+                raise TypeError("layers must be a list of positive integers")
             self.__weights['W{}'.format(layer)] = (np.random.randn(nodes,
                 previous) * np.sqrt(2 / previous))
             self.__weights['b{}'.format(layer)] = np.zeros((nodes, 1))
