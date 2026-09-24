@@ -11,7 +11,9 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     def sampling(arguments):
         """Sample a latent vector using the reparameterization trick."""
         mean, log_variance = arguments
-        noise = backend.random_normal(shape=backend.shape(mean))
+        batch = backend.shape(mean)[0]
+        dimensions = backend.int_shape(mean)[1]
+        noise = backend.random_normal(shape=(batch, dimensions))
         return mean + backend.exp(0.5 * log_variance) * noise
 
     encoder_input = keras.Input(shape=(input_dims,))
