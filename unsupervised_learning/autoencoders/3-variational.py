@@ -37,7 +37,12 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     def sampling(arguments):
         """Sample a latent vector using the reparameterization trick."""
         mean, log_variance = arguments
-        noise = backend.random_normal(shape=backend.shape(mean))
+        if hasattr(backend, 'get_session'):
+            noise = backend.random_normal(shape=backend.shape(mean))
+        else:
+            batch = backend.shape(mean)[0]
+            dimensions = backend.int_shape(mean)[1]
+            noise = backend.random_normal(shape=(batch, dimensions))
         return mean + backend.exp(0.5 * log_variance) * noise
 
     encoder_input = keras.Input(shape=(input_dims,))
@@ -55,8 +60,7 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     )([mean, log_variance])
     encoder = keras.Model(
         encoder_input,
-        [latent, mean, log_variance],
-        name='encoder'
+        [latent, mean, log_variance]
     )
 
     decoder_input = keras.Input(shape=(latent_dims,))
@@ -64,14 +68,30 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     for units in reversed(hidden_layers):
         decoded = keras.layers.Dense(units, activation='relu')(decoded)
     output = keras.layers.Dense(input_dims, activation='sigmoid')(decoded)
-    decoder = keras.Model(decoder_input, output, name='decoder')
+    decoder = keras.Model(decoder_input, output)
 
     auto_input = keras.Input(shape=(input_dims,))
     latent, mean, log_variance = encoder(auto_input)
     reconstruction = decoder(latent)
-    reconstruction = VAEOutput(input_dims)(
-        [auto_input, reconstruction, mean, log_variance]
-    )
-    auto = keras.Model(auto_input, reconstruction, name='autoencoder')
-    auto.compile(optimizer='adam', loss='binary_crossentropy')
+    if hasattr(backend, 'get_session'):
+        auto = keras.Model(auto_input, reconstruction)
+
+        def compute_loss(inputs, outputs):
+            """Return reconstruction and KL losses for each input."""
+            reconstruction_loss = backend.binary_crossentropy(inputs, outputs)
+            reconstruction_loss = backend.sum(reconstruction_loss, axis=1)
+            kl_loss = -0.5 * backend.sum(
+                1 + log_variance - backend.square(mean)
+                - backend.exp(log_variance),
+                axis=-1
+            )
+            return reconstruction_loss + kl_loss
+
+        auto.compile(optimizer='Adam', loss=compute_loss)
+    else:
+        reconstruction = VAEOutput(input_dims)(
+            [auto_input, reconstruction, mean, log_variance]
+        )
+        auto = keras.Model(auto_input, reconstruction)
+        auto.compile(optimizer='adam', loss='binary_crossentropy')
     return encoder, decoder, auto
