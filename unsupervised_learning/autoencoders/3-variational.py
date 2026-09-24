@@ -16,17 +16,17 @@ class VAEOutput(keras.layers.Layer):
         """Return reconstruction while registering the VAE loss."""
         inputs, reconstruction, mean, log_variance = values
         backend = keras.backend
-        reconstruction_loss = backend.sum(
-            backend.binary_crossentropy(inputs, reconstruction),
-            axis=-1
+        reconstruction_loss = backend.mean(
+            backend.binary_crossentropy(inputs, reconstruction)
         )
-        reconstruction_loss *= self.input_dims
-        kl_loss = -0.5 * backend.sum(
+        kl_loss = backend.mean(-0.5 * backend.sum(
             1 + log_variance - backend.square(mean)
             - backend.exp(log_variance),
             axis=-1
+        ))
+        self.add_loss(
+            (self.input_dims - 1) * reconstruction_loss + kl_loss
         )
-        self.add_loss(backend.mean(reconstruction_loss + kl_loss))
         return reconstruction
 
 
@@ -73,5 +73,5 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
         [auto_input, reconstruction, mean, log_variance]
     )
     auto = keras.Model(auto_input, reconstruction, name='autoencoder')
-    auto.compile(optimizer='adam')
+    auto.compile(optimizer='adam', loss='binary_crossentropy')
     return encoder, decoder, auto
