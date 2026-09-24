@@ -44,8 +44,11 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     encoded = encoder_input
     for units in hidden_layers:
         encoded = keras.layers.Dense(units, activation='relu')(encoded)
-    mean = keras.layers.Dense(latent_dims)(encoded)
-    log_variance = keras.layers.Dense(latent_dims)(encoded)
+    mean = keras.layers.Dense(latent_dims, activation='linear')(encoded)
+    log_variance = keras.layers.Dense(
+        latent_dims,
+        activation='linear'
+    )(encoded)
     latent = keras.layers.Lambda(
         sampling,
         output_shape=(latent_dims,)
