@@ -12,5 +12,8 @@ def dropout_create_layer(prev, n, activation, keep_prob):
         units=n,
         activation=activation,
         kernel_initializer=initializer)
+    output = layer(prev)
+    if keep_prob == 0:
+        return output
     dropout = tf.layers.Dropout(rate=1 - keep_prob)
-    return dropout(layer(prev), training=True)
+    return dropout(output)
